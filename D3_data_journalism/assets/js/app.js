@@ -22,3 +22,18 @@ var svg = d3.select("#scatter")
 // Add an SVG group
 var chartGroup = svg.append("g")
 .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+// Get data from CSV file
+d3.csv("../data/data.csv").then(function(censusData, err) {
+    if (err) throw err;
+
+    // Parse Data
+    censusData.forEach(function(data) {
+        data.poverty = +data.poverty;
+        data.age = +data.age;
+        data.income = +data.income;
+        data.healthcare = +data.healthcare;
+        data.obesity = +data.obesity;
+        data.smokes = +data.smokes
+    });
+})
