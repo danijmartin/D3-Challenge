@@ -24,7 +24,7 @@ var chartGroup = svg.append("g")
 .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Get data from CSV file
-d3.csv("../data/data.csv").then(function(censusData, err) {
+d3.csv("./data/data.csv").then(function(censusData, err) {
     if (err) throw err;
 
     // Parse Data
@@ -45,4 +45,14 @@ d3.csv("../data/data.csv").then(function(censusData, err) {
     var yScale = d3.scaleLinear()
     .domain(d3.extent(data.healthcare))
     .range([height, 0]);
+
+    // Append circles to data points
+    var circlesGroup = chartGroup.selectAll("circle")
+    .data(censusData)
+    .enter()
+    .append("circle")
+    .classed("stateCircle", true)
+    .attr("cx", xScale)
+    .attr("cy", yScale)
+    .attr("r", 5);
 })
