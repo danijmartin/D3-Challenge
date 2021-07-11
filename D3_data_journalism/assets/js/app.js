@@ -36,4 +36,13 @@ d3.csv("../data/data.csv").then(function(censusData, err) {
         data.obesity = +data.obesity;
         data.smokes = +data.smokes
     });
+
+    // Scales
+    var xScale = d3.scaleLinear()
+    .domain(d3.extent(data.poverty))
+    .range([0, width]);
+
+    var yScale = d3.scaleLinear()
+    .domain(d3.extent(data.healthcare))
+    .range([height, 0]);
 })
