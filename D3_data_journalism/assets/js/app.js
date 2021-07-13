@@ -27,6 +27,8 @@ var chartGroup = svg.append("g")
 d3.csv("assets/data/data.csv").then(function(censusData, err) {
     if (err) throw err;
 
+    console.log(typeof(censusData[0].age));
+
     // Parse Data
     censusData.forEach(function(data) {
         data.poverty = +data.poverty;
@@ -36,6 +38,8 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
         data.obesity = +data.obesity;
         data.smokes = +data.smokes
     });
+
+    console.log(censusData);
 
     // Scales
     var xScale = d3.scaleLinear()
@@ -56,15 +60,17 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
     .classed("stateCircle", true)
     .attr("cx", d => xScale(d.poverty))
     .attr("cy", d => yScale(d.healthcare))
-    .attr("r", 10);
+    .attr("r", 15);
 
     var circleText = chartGroup.selectAll("text")
+    .data(censusData)
     .enter()
     .append("text")
     .classed("stateText", true)
-    .text(censusData, d => d.abbr)
     .attr("x", d => xScale(d.poverty))
-    .attr("y", d => yScale(d.healthcare));
+    .attr("y", d => yScale(d.healthcare))
+    .attr("dy", "5px")
+    .text(d => d.abbr);
 
     // Create Axes and append to chart
     var xAxis = d3.axisBottom(xScale);
@@ -76,4 +82,18 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
 
     chartGroup.append("g")
     .call(yAxis);
-})
+
+    //Add Axis Labels
+    chartGroup.append("text")
+    .attr("transform", `translate(${width/2-margin.left}, ${height + margin.top - 10})`)
+    .classed("active", true)
+    .text("In Poverty (%)");
+
+    chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left -5)
+    .attr("x", 0 - (height/2))
+    .attr("dy", "1em")
+    .classed("active", true)
+    .text("Lacks Healthcare (%)")
+});
