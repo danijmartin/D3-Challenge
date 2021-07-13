@@ -71,7 +71,7 @@ function makeResponsive() {
         .attr("cy", d => yScale(d.healthcare))
         .attr("r", 15);
 
-        var circleText = chartGroup.selectAll("text")
+        var circleText = chartGroup.selectAll(".stateText")
         .data(censusData)
         .enter()
         .append("text")
@@ -104,9 +104,9 @@ function makeResponsive() {
         .attr("x", 0 - (height/2))
         .attr("dy", "1em")
         .classed("active", true)
-        .text("Lacks Healthcare (%)")
-    });
+        .text("Healthcare (%)")
 
+    });
 };
 
 // call makeResponsive when browser loads
@@ -114,3 +114,4 @@ makeResponsive();
 
 // call makeResponsive again any time window is resized
 d3.select(window).on("resize", makeResponsive);
+
