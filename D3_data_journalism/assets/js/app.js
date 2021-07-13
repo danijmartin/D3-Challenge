@@ -39,11 +39,13 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
 
     // Scales
     var xScale = d3.scaleLinear()
-    .domain(d3.extent(censusData, d => d.poverty))
+    .domain([d3.min(censusData, d => d.poverty) -1,
+        d3.max(censusData, d => d.poverty)])
     .range([0, width]);
 
     var yScale = d3.scaleLinear()
-    .domain(d3.extent(censusData, d => d.healthcare))
+    .domain([d3.min(censusData, d => d.healthcare) -1,
+        d3.max(censusData, d => d.healthcare)])
     .range([height, 0]);
 
     // Append circles to data points
@@ -52,8 +54,26 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
     .enter()
     .append("circle")
     .classed("stateCircle", true)
-    .attr("cx", xScale)
-    .attr("cy", yScale)
-    .attr("r", 5)
-    .text(censusData, d => d.abbr);
+    .attr("cx", d => xScale(d.poverty))
+    .attr("cy", d => yScale(d.healthcare))
+    .attr("r", 10);
+
+    var circleText = chartGroup.selectAll("text")
+    .enter()
+    .append("text")
+    .classed("stateText", true)
+    .text(censusData, d => d.abbr)
+    .attr("x", d => xScale(d.poverty))
+    .attr("y", d => yScale(d.healthcare));
+
+    // Create Axes and append to chart
+    var xAxis = d3.axisBottom(xScale);
+    var yAxis = d3.axisLeft(yScale);
+
+    chartGroup.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(xAxis);
+
+    chartGroup.append("g")
+    .call(yAxis);
 })
